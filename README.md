@@ -21,6 +21,6 @@ Para el desarrollo de este proyecto se usaron algunas herrmientas como:
 
 # Creditos 
 
-Hecho en su totalidad por Mauro Infante- Maurux01
-Este proyecto fue creado gracias al apoyo del bootcamp Generation colombia, muchas gracias!
+Hecho en su totalidad por Mauro Infante- Maurux01  <br>
+Este proyecto fue creado gracias al apoyo del bootcamp Generation colombia, muchas gracias!  <br>
 Copyright (c) 2026 Author. All Rights Reserved.
