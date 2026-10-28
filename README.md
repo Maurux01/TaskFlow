@@ -13,7 +13,7 @@ No pierdas la oportunidad de ponerle orden a tu vida con Taskflow!
 
 # Wireframe
 Aqui una vista del wireframe hecho en figma para referencia del html
-![wireframe-taskflow](assets\wireframe.png)
+![wireframe-taskflow](assets/wireframe.png)
 
 # Herramientas
 
