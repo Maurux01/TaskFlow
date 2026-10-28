@@ -1,11 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taskflow</title>
+    <title>TaskFlow </title>
+    <link href="style.css" rel="stylesheet">
+    <link href="script.js" defer>
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <img src="assets/logo.png" width="40px">
+           <span>TaskFlow</span> 
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" title="Configuración">⚙️</button>
+            <button class="icon-btn" title="Perfil">👤</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- PANEL IZQUIERDO: TAREAS -->
+        <section class="tasks-panel">
+            <div class="tasks-header">
+                <h2 class="panel-title">Mis tareas</h2>
+            </div>
+            <div class="task-list" id="taskList">
+                <div class="task-item">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" class="task-checkbox" checked>
+                        <span class="task-text completed">Terminar el wireframe</span>
+                    </div>
+                    <button class="delete-btn" title="Eliminar">🗑️</button>
+                </div>
+            </div>
+            <div class="new-task-container">
+                <button class="new-task-btn" id="newTaskBtn">
+                    <span>Nueva tarea</span>
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- PANEL CENTRAL: WIDGETS -->
+        <section class="widgets-panel">
+            <div class="widget quote-widget"> 
+                <!-- quote api -->
+                <p class="quote-text" id="dailyQuote">"No puede haber una revolución total sino una revolución permanente. Como el amor, es el goce fundamental de la vida."</p>
+                <p class="quote-author" id="quoteAuthor">- Max Ernst</p>
+            </div>
+
+            <div class="info-widgets">
+                <div class="widget weather-widget">
+                    <h3>Clima</h3>
+                    <div class="weather-icon" id="weatherIcon">❄️</div>
+                    <div class="weather-temp" id="weatherTemp">10°C</div>
+                    <div class="weather-location" id="weatherLocation">Ubicación aproximada</div>
+                </div>
+
+                <div class="widget clock-widget">
+                    <h3>Reloj</h3>
+                    <div class="clock-display" id="clockDisplay">00:00:00</div>
+                    <div class="clock-actions">
+                        <button class="clock-action-btn">️ Temporizador</button>
+                        <button class="clock-action-btn">⏰ Alarmas</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget calendar-panel">
+                <h3>Google Calendar</h3>
+                <div class="calendar-icon"></div>
+                <div class="calendar-actions">
+                    <button class="calendar-btn"> Agregar evento</button>
+                    <button class="calendar-btn">📋 Eventos próximos</button>
+                    <button class="calendar-btn">📅 Ver mes</button>
+                    <button class="calendar-btn">📆 Ver semana</button>
+                    <button class="calendar-btn">🔔 Recordatorio</button>
+                    <button class="calendar-btn">✏️ Editar calendario</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCK DERECHO -->
+        <aside class="dock">
+            <button class="dock-btn" title="Filtros">🔽</button>
+            <button class="dock-btn" title="Buscar">🔍</button>
+            <button class="dock-btn" title="compartir">▶️</button>
+            <button class="dock-btn" title="Estadísticas">📊</button>
+        </aside>
+    </main>
+
+  <footer class="footer-grid">
+    <div class="footer-column" id="footerLeft">
+        <!-- Columna izquierda vacía (inforamcion) -->
+    </div>
+    <div class="footer-column" id="footerRight">
+        <!-- Columna derecha vacía (lista de redes sociaeles) -->
+    </div>
+</footer>
+
     
 </body>
 </html>
