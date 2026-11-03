@@ -205,10 +205,6 @@ main {
   color: #ffffff;
 }
 
-.toggle-form {
-  display: none;
-}
-
 .new-task-form {
   background: #c0c0c0;
   border: 2px inset #c0c0c0;
@@ -216,11 +212,6 @@ main {
   margin-top: 4px;
   flex-direction: column;
   gap: 2px;
-  display: none;
-}
-
-#toggleForm:checked ~ .new-task-form {
-  display: flex;
 }
 
 .new-task-form label {
