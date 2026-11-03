@@ -95,10 +95,31 @@
                 </div>
             </div>
             <div class="new-task-container">
-                <button class="new-task-btn" id="newTaskBtn">
+                <button class="new-task-btn btn" type="button" data-bs-toggle="collapse" data-bs-target="#newTaskForm" aria-expanded="false" aria-controls="newTaskForm">
                     <span>Nueva tarea</span>
                     <span class="plus-icon">+</span>
                 </button>
+                <div class="collapse" id="newTaskForm">
+                    <form class="new-task-form card card-body">
+                    <label>Nombre de la tarea</label>
+                    <input type="text" id="taskName" required>
+                    <label>Contenido</label>
+                    <textarea id="taskDesc" rows="2" required></textarea>
+                    <label>Estado</label>
+                    <select id="taskStatus">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En progreso">En progreso</option>
+                        <option value="Completada">Completada</option>
+                        <option value="Importante">Importante</option>
+                    </select>
+                    <label>Fecha de entrega</label>
+                    <input type="date" id="taskDate">
+                    <div class="form-actions">
+                        <button type="submit">Agregar</button>
+                        <button type="button" id="cancelTaskBtn">Cancelar</button>
+                    </div>
+                </form>
+                </div>
             </div>
         </section>
 

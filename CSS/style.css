@@ -100,8 +100,8 @@ main {
 }
 
 .tasks-panel {
-  width: 230px;
-flex-shrink: 0;
+  width: 40%;
+  flex: 0 0 40%;
 }
 
 .widgets-panel {
@@ -198,6 +198,51 @@ flex-shrink: 0;
 .task-status.status-pending {
   background: #808080;
   color: #ffffff;
+}
+
+.task-status.status-important {
+  background: #800000;
+  color: #ffffff;
+}
+
+.toggle-form {
+  display: none;
+}
+
+.new-task-form {
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+  padding: 4px;
+  margin-top: 4px;
+  flex-direction: column;
+  gap: 2px;
+  display: none;
+}
+
+#toggleForm:checked ~ .new-task-form {
+  display: flex;
+}
+
+.new-task-form label {
+  font-weight: bold;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.new-task-form input,
+.new-task-form textarea,
+.new-task-form select {
+  background: #ffffff;
+  border: 2px inset #c0c0c0;
+  padding: 2px;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
 }
 
 .task-desc {
