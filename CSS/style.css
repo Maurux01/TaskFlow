@@ -1,0 +1,437 @@
+/* ============================================
+   TaskFlow - Windows 98 theme
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "MS Sans Serif", "Tahoma", "Segoe UI", sans-serif;
+  font-size: 11px;
+  color: #000000;
+  background: #008080; /* classic teal desktop */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------- bevel helpers ---------- */
+.raised {
+  border: 2px outset #c0c0c0;
+}
+.sunken {
+  border: 2px inset #c0c0c0;
+  background: #ffffff;
+}
+
+/* ---------- header = title bar ---------- */
+header {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #ffffff;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #000000;
+  font-weight: bold;
+  font-size: 12px;
+  min-height: 20px;
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+header .logo img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+header .logo span {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.header-actions .icon-btn {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- main layout ---------- */
+main {
+  flex: 1;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  overflow: hidden;
+}
+
+/* ---------- panels as windows ---------- */
+.tasks-panel,
+.widgets-panel,
+.dock {
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tasks-panel {
+  width: 230px;
+flex-shrink: 0;
+}
+
+.widgets-panel {
+  flex: 1;
+  gap: 4px;
+  padding: 4px;
+  overflow: auto;
+}
+
+.dock {
+  width: 44px;
+  flex-shrink: 0;
+  padding: 2px;
+  gap: 2px;
+  align-items: center;
+}
+
+/* window title bars */
+.tasks-header,
+.widget h3,
+.calendar-panel h3 {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #ffffff;
+  margin: 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: bold;
+  border-bottom: 1px solid #000000;
+}
+
+.tasks-header {
+  display: flex;
+  align-items: center;
+}
+
+.panel-title {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* ---------- task list ---------- */
+.task-list {
+  flex: 1;
+  overflow: auto;
+  padding: 4px;
+  background: #ffffff;
+  border: 2px inset #c0c0c0;
+  margin: 4px;
+}
+
+.task-card {
+  background: #ffffff;
+  border: 2px outset #c0c0c0;
+  margin-bottom: 4px;
+  padding: 4px;
+}
+
+.task-card-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.task-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.task-name.completed {
+  text-decoration: line-through;
+  color: #808080;
+}
+
+.task-status {
+  font-size: 10px;
+  padding: 0 4px;
+  border: 1px solid #000000;
+  background: #c0c0c0;
+}
+
+.task-status.status-done {
+  background: #008000;
+  color: #ffffff;
+}
+
+.task-status.status-progress {
+  background: #000080;
+  color: #ffffff;
+}
+
+.task-status.status-pending {
+  background: #808080;
+  color: #ffffff;
+}
+
+.task-desc {
+  margin: 2px 0;
+  font-size: 10px;
+  color: #404040;
+}
+
+.task-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #808080;
+  padding-top: 2px;
+  margin-top: 2px;
+}
+
+.task-date {
+  font-size: 10px;
+}
+
+.task-checkbox {
+  margin-right: 4px;
+}
+
+.delete-btn {
+  padding: 0 4px;
+  font-size: 10px;
+  min-width: 18px;
+}
+
+.new-task-container {
+  padding: 4px;
+}
+
+.new-task-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 6px;
+}
+
+.plus-icon {
+  font-weight: bold;
+}
+
+/* ---------- widgets ---------- */
+.widget {
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+  padding: 0;
+}
+
+.widget.quote-widget {
+  padding: 6px;
+  font-style: italic;
+  text-align: center;
+}
+
+.quote-text {
+  margin: 0 0 4px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.quote-author {
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.info-widgets {
+  display: flex;
+  gap: 4px;
+}
+
+.info-widgets .widget {
+  flex: 1;
+}
+
+.weather-widget,
+.clock-widget {
+  padding: 6px;
+  text-align: center;
+}
+
+.weather-icon,
+.clock-display {
+  font-size: 24px;
+  margin: 4px 0;
+}
+
+.clock-display {
+  background: #ffffff;
+  border: 2px inset #c0c0c0;
+  padding: 2px 6px;
+  font-family: "Courier New", monospace;
+  font-size: 16px;
+}
+
+.weather-temp {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.weather-location {
+  color: #404040;
+  font-size: 10px;
+}
+
+.clock-actions {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.calendar-panel {
+  padding: 6px;
+}
+
+.calendar-icon {
+  height: 16px;
+  margin: 4px 0;
+  background: #ffffff;
+  border: 2px inset #c0c0c0;
+}
+
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.calendar-btn {
+  flex: 1 1 45%;
+}
+
+/* ---------- dock ---------- */
+.dock-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- buttons base ---------- */
+button {
+  background: #c0c0c0;
+  color: #000000;
+  border: 2px outset #c0c0c0;
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: default;
+  border-radius: 0;
+}
+
+button:hover {
+  background: #c0c0c0;
+}
+
+button:active {
+  border-style: inset;
+  padding: 3px 5px 1px 7px;
+}
+
+button:focus {
+  outline: 1px dotted #000000;
+  outline-offset: -4px;
+}
+
+/* ---------- footer = taskbar ---------- */
+footer.footer-grid {
+  background: #c0c0c0;
+  border-top: 2px outset #c0c0c0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  gap: 4px;
+}
+
+footer.footer-grid::before {
+  content: "Inicio";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 22px;
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+  font-weight: bold;
+  padding-left: 2px;
+}
+
+.footer-column {
+  flex: 1;
+  height: 22px;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+  margin: 0 2px;
+}
+
+/* ---------- scrollbars (webkit) ---------- */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+}
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px outset #c0c0c0;
+}
+::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+  height: 16px;
+}
+
+/* ---------- misc ---------- */
+h1, h2, h3, p {
+  margin: 0;
+}
+
+a {
+  color: #000080;
+}
+
+/* selected task highlight handled via hover above */
