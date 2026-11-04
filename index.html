@@ -94,28 +94,28 @@
                 </div>
             </div>
             <div class="new-task-container">
-                <button class="new-task-btn btn" type="button" data-bs-toggle="collapse" data-bs-target="#newTaskForm" aria-expanded="false" aria-controls="newTaskForm">
+                <button class="new-task-btn" type="button" data-bs-toggle="collapse" data-bs-target="#newTaskForm" aria-expanded="false" aria-controls="newTaskForm">
                     <span>Nueva tarea</span>
                     <span class="plus-icon">+</span>
                 </button>
                 <div class="collapse" id="newTaskForm">
-                    <form class="new-task-form card card-body">
+                    <form class="new-task-form">
                     <label>Nombre de la tarea</label>
-                    <input type="text" id="taskName" class="form-control form-control-sm" required>
+                    <input type="text" id="taskName" required>
                     <label>Contenido</label>
-                    <textarea id="taskDesc" rows="2" class="form-control form-control-sm" required></textarea>
+                    <textarea id="taskDesc" rows="2" required></textarea>
                     <label>Estado</label>
-                    <select id="taskStatus" class="form-control form-control-sm">
+                    <select id="taskStatus">
                         <option value="Pendiente">Pendiente</option>
                         <option value="En progreso">En progreso</option>
                         <option value="Completada">Completada</option>
                         <option value="Importante">Importante</option>
                     </select>
                     <label>Fecha de entrega</label>
-                    <input type="date" id="taskDate" class="form-control form-control-sm">
+                    <input type="date" id="taskDate">
                     <div class="form-actions">
-                        <button type="button" class="btn btn-sm">Agregar</button>
-                        <button type="button" id="cancelTaskBtn" class="btn btn-sm">Cancelar</button>
+                        <button type="button">Agregar</button>
+                        <button type="button" id="cancelTaskBtn">Cancelar</button>
                     </div>
                 </form>
                 </div>

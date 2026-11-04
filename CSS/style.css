@@ -209,6 +209,7 @@ main {
   border: 2px inset #c0c0c0;
   padding: 4px;
   margin-top: 4px;
+  display: flex;
   flex-direction: column;
   gap: 2px;
 }
@@ -227,6 +228,7 @@ main {
   padding: 2px;
   font-family: inherit;
   font-size: 11px;
+  width: 100%;
 }
 
 .form-actions {
