@@ -56,7 +56,7 @@ Vista del wireframe en Figma para referencia del HTML:
 ## APIs
 
 - Calendar: https://developers.google.com/workspace/calendar/api/guides/overview?hl=es-419
-- Time: https://timeapi.bio/
+- Time: https://time.now/developer/api
 - Weather: https://open-meteo.com/
 - Frase del día: https://frasedeldia.azurewebsites.net/api/phrase
 
