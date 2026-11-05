@@ -23,6 +23,10 @@ Para el desarrollo de este proyecto se usaron algunas herrmientas como:
 - Figma : https://www.figma.com/design/gwwLYaZRAwn027K6FYgYbU/Taskflow-planificador-de-tareas?node-id=0-1&t=M2keFS30TokYQRMB-1
 
 
+# Demo
+
+Proyecto publicado mediante GitHub Pages: https://maurux01.github.io/TaskFlow/
+
 # Apis 
 
 - Calendar: https://developers.google.com/workspace/calendar/api/guides/overview?hl=es-419
