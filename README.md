@@ -32,8 +32,7 @@ TaskFlow/
 ├── CSS/
 │   └── style.css
 ├── JS/
-│   ├── app.js          # Validación del formulario de tareas
-│   └── script.js
+│   └── app.js          # Validación del formulario de tareas
 ├── HTML/
 │   └── Account.html    # Pantalla de inicio de sesión (estilo Windows 98)
 └── assets/

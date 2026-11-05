@@ -179,29 +179,36 @@ main {
 
 .task-status {
   font-size: 10px;
-  padding: 0 4px;
-  border: 1px solid #000000;
-  background: #c0c0c0;
+  padding: 0 18px 0 4px;
+  border: 2px outset #c0c0c0;
+  background-color: #c0c0c0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M0 2 L4 6 L8 2 Z' fill='black'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 3px center;
+  color: #000000;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  min-width: 96px;
 }
 
 .task-status.status-done {
-  background: #008000;
-  color: #ffffff;
+  color: #008000;
 }
 
 .task-status.status-progress {
-  background: #000080;
-  color: #ffffff;
+  color: #000080;
 }
 
 .task-status.status-pending {
-  background: #808080;
-  color: #ffffff;
+  color: #404040;
 }
 
 .task-status.status-important {
-  background: #800000;
-  color: #ffffff;
+  color: #800000;
 }
 
 .new-task-form {
