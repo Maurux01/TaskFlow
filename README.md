@@ -1,41 +1,104 @@
 # TaskFlow
-TaskFlow es mucho mas que un planificador  de tareas, es El planificador de traeas, tiene muchas funciones como:
 
-- Ver el clima de forma integrada en la aplicacion en tiempo real
-- Asi como tener un reloj, que ademas de dar la hora exacta donde estas, tiene funcion de temporizador y tiene para crear alarmas
-- Puedes conectar tu cuenta de google para poder ver tu calendario en la app sin salir de ella 
-- Cada dia muestra una frase diferente en la parte superior que invita a la reflexion y movitacion
-- Ademas de permitir agregar nuevas tareas, gestionarlas por categorias , editar el contenido de las mismas y eliminarlas
+TaskFlow es mucho más que un planificador de tareas: es **el** planificador de tareas. Integra en un solo lugar varias herramientas de productividad:
 
-Taskflow integra multiples herrmientas haciendola la "navaja suiza" de la productividad, una  herrmaientas muy util para desarrolladores de software o para cualquier persona que desee tener control de sus tareas con multiples y utiles herrmientas en un solo lugar.
+- Ver el clima en tiempo real.
+- Reloj con temporizador y alarmas.
+- Integración con Google Calendar.
+- Frase motivacional diaria.
+- Crear, gestionar, editar y eliminar tareas por categorías.
 
-No pierdas la oportunidad de ponerle orden a tu vida con Taskflow!
+TaskFlow busca ser la "navaja suiza" de la productividad, útil para desarrolladores de software y para cualquier persona que quiera tener control de sus tareas con múltiples herramientas en un solo lugar.
 
-# Wireframe
-Aqui una vista del wireframe hecho en figma para referencia del html
+No pierdas la oportunidad de ponerle orden a tu vida con TaskFlow.
+
+## Cómo ejecutar el proyecto localmente
+
+1. Clona o descarga el repositorio.
+2. Abre la carpeta del proyecto.
+3. Abre `index.html` en tu navegador (doble clic) o usa un servidor local, por ejemplo:
+   - VS Code: extensión "Live Server".
+   - Python: `python -m http.server 8000` y visita `http://localhost:8000`.
+4. Para probar el login, abre `HTML/Account.html`.
+
+No requiere instalación de dependencias: Bootstrap se carga por CDN.
+
+## Estructura del proyecto
+
+```
+TaskFlow/
+├── index.html
+├── README.md
+├── CSS/
+│   └── style.css
+├── JS/
+│   ├── app.js          # Validación del formulario de tareas
+│   └── script.js
+├── HTML/
+│   └── Account.html    # Pantalla de inicio de sesión (estilo Windows 98)
+└── assets/
+    ├── logo.png
+    ├── wireframe.png
+    └── Taskflow.png
+```
+
+## Wireframe
+
+Vista del wireframe en Figma para referencia del HTML:
+
 ![wireframe-taskflow](assets/wireframe.png)
 
-# Herramientas
-
-Para el desarrollo de este proyecto se usaron algunas herrmientas como:
+## Herramientas y recursos
 
 - Trello: https://trello.com/b/NyN3cwda/personal-project-generation
-- Figma : https://www.figma.com/design/gwwLYaZRAwn027K6FYgYbU/Taskflow-planificador-de-tareas?node-id=0-1&t=M2keFS30TokYQRMB-1
+- Figma: https://www.figma.com/design/gwwLYaZRAwn027K6FYgYbU/Taskflow-planificador-de-tareas?node-id=0-1&t=M2keFS30TokYQRMB-1
 
-
-# Demo
-
-Proyecto publicado mediante GitHub Pages: https://maurux01.github.io/TaskFlow/
-
-# Apis 
+## APIs
 
 - Calendar: https://developers.google.com/workspace/calendar/api/guides/overview?hl=es-419
 - Time: https://timeapi.bio/
-- Wheater: https://open-meteo.com/
-- Frase : https://frasedeldia.azurewebsites.net/api/phrase
+- Weather: https://open-meteo.com/
+- Frase del día: https://frasedeldia.azurewebsites.net/api/phrase
 
-# Creditos 
+## Demo (GitHub Pages)
 
-Hecho en su totalidad por Mauro Infante- Maurux01  <br>
-Este proyecto fue creado gracias al apoyo del bootcamp Generation colombia, muchas gracias!  <br>
+Proyecto publicado: https://maurux01.github.io/TaskFlow/
+
+## Cumplimiento del Sprint 1
+
+### Tarea 1 — Implementación del Wireframe con Bootstrap
+- Estructura principal de la página con header, main y footer.
+- Formulario para registrar tareas (nombre, descripción/contenido, estado, fecha).
+- Espacio destinado a la lista de tareas (`#taskList`).
+- Componentes implementados con Bootstrap (CDN) y CSS propio.
+- Proyecto almacenado en repositorio de GitHub.
+
+### Tarea 2 — Tarjeta de Tarea y Lista de Tareas
+- Componente visual de tarjeta (`task-card` con clases Bootstrap `card`).
+- Cada tarjeta muestra: nombre, descripción, fecha de entrega y estado (badge).
+- Contenedor `#taskList` para visualizar las tareas.
+- Cinco tarjetas de ejemplo con información diferente.
+- Interfaz organizada y consistente con el wireframe.
+
+### Tarea 3 — Validación de Entradas del Formulario
+- Archivo `JS/app.js` creado e incluido correctamente en `index.html`.
+- Función `validFormFieldInput(data)` implementada.
+- Campos recuperados mediante `document.querySelector` y `.value`.
+- Uso de `console.log` para verificar los datos ingresados.
+- Validaciones: nombre no vacío, descripción no vacía, estado con opción seleccionada, fecha válida.
+- Componente Alert de Bootstrap que se muestra con datos inválidos y se oculta con datos válidos.
+- Botón "Cancelar" limpia los campos y cierra el formulario.
+- Pruebas manuales: formulario vacío, campos incompletos y formulario válido.
+
+### Cierre del Sprint 1
+- Repositorio actualizado.
+- Archivo `README.md` presente con descripción, Trello, Figma y demo.
+- Proyecto publicado en GitHub Pages (enlace arriba).
+
+## Créditos
+
+Hecho en su totalidad por Mauro Infante — Maurux01.
+
+Este proyecto fue creado gracias al apoyo del bootcamp Generation Colombia. ¡Muchas gracias!
+
 Copyright (c) 2026 Author. All Rights Reserved.

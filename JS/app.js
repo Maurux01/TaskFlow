@@ -95,4 +95,26 @@ document.addEventListener('DOMContentLoaded', function () {
             if (addBtn) addBtn.click();
         });
     }
+
+    // Botón Cancelar: cerrar el formulario y limpiar campos
+    const cancelBtn = document.querySelector('#cancelTaskBtn');
+    const collapseForm = document.querySelector('#newTaskForm');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function () {
+            // Limpiar campos
+            if (taskNameInput) taskNameInput.value = '';
+            if (taskDescInput) taskDescInput.value = '';
+            if (taskStatusInput) taskStatusInput.value = 'Pendiente';
+            if (taskDateInput) taskDateInput.value = '';
+            // Ocultar alerta
+            if (alertBox) alertBox.classList.add('d-none');
+            // Cerrar el colapsable
+            if (collapseForm) {
+                collapseForm.classList.remove('show');
+                const btnToggle = document.querySelector('.new-task-btn');
+                if (btnToggle) btnToggle.setAttribute('aria-expanded', 'false');
+            }
+            console.log('Formulario cancelado y limpiado');
+        });
+    }
 });
