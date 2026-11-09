@@ -74,8 +74,10 @@ function createTaskCard(task) {
         <p class="task-desc">${escapeHtml(task.description)}</p>
         <div class="task-card-footer">
             <span class="task-date">📅 ${escapeHtml(task.date)}</span>
-            <button class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
-            <button class="delete-btn" title="Eliminar">🗑️</button>
+            <div class="task-card-actions">
+                <button class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
+                <button class="delete-btn" title="Eliminar">🗑️</button>
+            </div>
         </div>
     `;
 

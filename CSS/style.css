@@ -561,3 +561,8 @@ a {
     border-color: #008000;
     background: #f0fff0;
 }
+
+.task-card-actions {
+    display: flex;
+    gap: 2px;
+}
