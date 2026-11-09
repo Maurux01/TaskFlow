@@ -219,6 +219,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const isDone = newStatus === 'Completada';
                 if (checkbox) checkbox.checked = isDone;
                 if (nameSpan) nameSpan.classList.toggle('completed', isDone);
+                card.classList.toggle('task-completed', isDone);
+                const completeBtn = card.querySelector('.complete-btn');
+                if (completeBtn) completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
 
                 const id = card.dataset.id;
                 if (id) {
@@ -240,11 +243,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const isDone = target.checked;
                 if (nameSpan) nameSpan.classList.toggle('completed', isDone);
                 if (select) {
-                    if (isDone) {
-                        select.value = 'Completada';
-                        select.className = 'task-status ' + statusClass('Completada');
-                    }
+                    const newStatus = isDone ? 'Completada' : 'Pendiente';
+                    select.value = newStatus;
+                    select.className = 'task-status ' + statusClass(newStatus);
                 }
+                card.classList.toggle('task-completed', isDone);
+                const completeBtn = card.querySelector('.complete-btn');
+                if (completeBtn) completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
                 const id = card.dataset.id;
                 if (id && select) {
                     const tasks = getStoredTasks().map(function (t) {
