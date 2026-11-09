@@ -555,3 +555,9 @@ a {
     gap: 4px;
     font-weight: normal;
 }
+
+/* ---------- tarea completada (Sprint 2 - Tarea 4) ---------- */
+.task-card.task-completed {
+    border-color: #008000;
+    background: #f0fff0;
+}

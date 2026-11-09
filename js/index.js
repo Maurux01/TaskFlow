@@ -12,6 +12,10 @@ const taskDateInput = document.querySelector('#taskDate');
 // Contenedor donde se agregan las tareas creadas
 const taskList = document.querySelector('#taskList');
 
+// Instancia de TaskManager (Sprint 2 - Tarea 4)
+const taskManager = new TaskManager();
+console.log(taskManager.tasks);
+
 // ---------- helpers ----------
 
 function escapeHtml(value) {
@@ -70,9 +74,12 @@ function createTaskCard(task) {
         <p class="task-desc">${escapeHtml(task.description)}</p>
         <div class="task-card-footer">
             <span class="task-date">📅 ${escapeHtml(task.date)}</span>
+            <button class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
             <button class="delete-btn" title="Eliminar">🗑️</button>
         </div>
     `;
+
+    if (completed) card.classList.add('task-completed');
 
     return card;
 }
@@ -135,9 +142,50 @@ document.addEventListener('DOMContentLoaded', function () {
     // Renderizar tareas guardadas previamente
     renderStoredTasks();
 
+    // Inicializar botón de completado en todas las tarjetas (estáticas y dinámicas)
+    if (taskList) {
+        taskList.querySelectorAll('.task-card').forEach(function (card) {
+            const btn = card.querySelector('.complete-btn');
+            const nameSpan = card.querySelector('.task-name');
+            if (!btn) return;
+            const completed = !!(nameSpan && nameSpan.classList.contains('completed'));
+            btn.textContent = completed ? '↺ Pendiente' : '✔ Completar';
+            if (completed) card.classList.add('task-completed');
+        });
+    }
+
     // Eliminar cualquier tarjeta al pulsar su botón "Eliminar"
     if (taskList) {
         taskList.addEventListener('click', function (e) {
+            const completeBtn = e.target && e.target.closest ? e.target.closest('.complete-btn') : null;
+            if (completeBtn) {
+                const card = completeBtn.closest('.task-card');
+                if (!card) return;
+                const nameSpan = card.querySelector('.task-name');
+                const checkbox = card.querySelector('.task-checkbox');
+                const select = card.querySelector('.task-status');
+                const isDone = !(nameSpan && nameSpan.classList.contains('completed'));
+                if (nameSpan) nameSpan.classList.toggle('completed', isDone);
+                if (checkbox) checkbox.checked = isDone;
+                if (select) {
+                    const newStatus = isDone ? 'Completada' : 'Pendiente';
+                    select.value = newStatus;
+                    select.className = 'task-status ' + statusClass(newStatus);
+                }
+                card.classList.toggle('task-completed', isDone);
+                completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
+
+                const id = card.dataset.id;
+                if (id) {
+                    const tasks = getStoredTasks().map(function (t) {
+                        if (String(t.id) === String(id)) t.status = isDone ? 'Completada' : 'Pendiente';
+                        return t;
+                    });
+                    saveStoredTasks(tasks);
+                }
+                return;
+            }
+
             const deleteBtn = e.target && e.target.closest ? e.target.closest('.delete-btn') : null;
             if (!deleteBtn) return;
             const card = deleteBtn.closest('.task-card');
@@ -301,4 +349,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-PY

@@ -94,6 +94,16 @@ Proyecto publicado: https://maurux01.github.io/TaskFlow/
 - Archivo `README.md` presente con descripción, Trello, Figma y demo.
 - Proyecto publicado en GitHub Pages (enlace arriba).
 
+## Cumplimiento del Sprint 2
+
+### Tarea 4 — Clase de Tareas y marcado de completado
+- Carpeta `js/` organizada con `index.js` y `taskManager.js`.
+- Clase `TaskManager` creada en `js/taskManager.js` con `this.tasks = []`.
+- Scripts vinculados en `index.html` en el orden correcto (`taskManager.js` antes de `index.js`).
+- Instancia `taskManager` creada y verificada desde la consola (`[]`).
+- Botón **✔ Completar / ↺ Pendiente** en cada tarjeta para marcar y desmarcar una tarea como completada (toggle) sin recargar la página, con cambio visual (tachado, color y borde).
+- Cambios guardados en el repositorio.
+
 ## Créditos
 
 Hecho en su totalidad por Mauro Infante — Maurux01.
