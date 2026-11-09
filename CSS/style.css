@@ -2,8 +2,12 @@
    TaskFlow - Windows 98 theme
    ============================================ */
 
+@import url('https://fonts.cdnfonts.com/css/w95fa');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
 * {
   box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 html, body {
@@ -14,7 +18,7 @@ html, body {
 
 body {
   font-family: "MS Sans Serif", "Tahoma", "Segoe UI", sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   color: #000000;
   background: #008080; /* classic teal desktop */
   display: flex;
@@ -339,8 +343,8 @@ main {
   background: #ffffff;
   border: 2px inset #c0c0c0;
   padding: 2px 6px;
-  font-family: "Courier New", monospace;
-  font-size: 16px;
+  font-family: 'W95FA', "MS Sans Serif", "Microsoft Sans Serif", Tahoma, "Segoe UI", sans-serif;
+  font-size: 18px;
 }
 
 .weather-temp {
@@ -565,4 +569,8 @@ a {
 .task-card-actions {
     display: flex;
     gap: 2px;
+}
+
+.widget.calendar-panel h3 {
+    text-align: center;
 }

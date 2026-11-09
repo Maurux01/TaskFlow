@@ -54,10 +54,10 @@ Vista del wireframe en Figma para referencia del HTML:
 
 ## APIs
 
-- Calendar: https://developers.google.com/workspace/calendar/api/guides/overview?hl=es-419
+- Calendario: FullCalendar (open source) + eventos en localStorage
 - Time: https://time.now/developer/api
 - Weather: https://open-meteo.com/
-- Frase del día: https://frasedeldia.azurewebsites.net/api/phrase
+- Frase del día: lista local en español (sin API externa)
 
 ## Demo (GitHub Pages)
 
