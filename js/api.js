@@ -1,35 +1,22 @@
-// reloj
+// api.js - Integración de APIs (reloj, clima, frase del día, calendario)
+
+// ---------- Reloj ----------
 function initClock() {
   const el = document.getElementById('clockDisplay');
   if (!el) return;
   const tick = () => {
-    const now = new Date();
-    el.textContent = now.toLocaleTimeString('es-CO', { hour12: false });
+    el.textContent = new Date().toLocaleTimeString('es-CO', { hour12: false });
   };
   tick();
   setInterval(tick, 1000);
 }
 
-
-// frase del dia 
-async function loadQuote() {
-  try {
-    const res = await fetch('https://frasedeldia.azurewebsites.net/api/phrase');
-    const data = await res.json();
-    document.getElementById('dailyQuote').textContent = `“${data.phrase || data.text}”`;
-    document.getElementById('quoteAuthor').textContent = `- ${data.author || 'Anónimo'}`;
-  } catch (e) {
-    // Mantener la frase estática si CORS/falla
-  }
-}
-
-
 // ---------- Clima (Open-Meteo) ----------
 const WEATHER_CODES = {
-  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
-  51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
-  71:'🌨️',73:'🌨️',75:'🌨️',80:'🌦️',81:'🌧️',82:'🌧️',
-  95:'⛈️',96:'⛈️',99:'⛈️'
+  0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+  51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+  71: '🌨️', 73: '🌨️', 75: '🌨️', 80: '🌦️', 81: '🌧️', 82: '🌧️',
+  95: '⛈️', 96: '⛈️', 99: '⛈️'
 };
 
 async function loadWeather(lat, lon) {
@@ -55,6 +42,28 @@ function initWeather() {
   } else {
     loadWeather(4.711, -74.0721);
   }
+}
+
+// ---------- Frase del día ----------
+async function loadQuote() {
+  try {
+    const res = await fetch('https://frasedeldia.azurewebsites.net/api/phrase');
+    const data = await res.json();
+    document.getElementById('dailyQuote').textContent = `“${data.phrase || data.text || ''}”`;
+    document.getElementById('quoteAuthor').textContent = `- ${data.author || 'Anónimo'}`;
+  } catch (e) {
+    // mantener la frase estática si CORS/falla
+  }
+}
+
+// ---------- Google Calendar (Fase 1: abrir en nueva pestaña) ----------
+function initCalendarButtons() {
+  const btns = document.querySelectorAll('.calendar-btn');
+  btns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      window.open('https://calendar.google.com/calendar/u/0/r', '_blank');
+    });
+  });
 }
 
 // ---------- Init ----------
