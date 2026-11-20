@@ -288,20 +288,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (alertBox) alertBox.classList.add('d-none');
                 console.log('Formulario válido');
 
+                // Registrar la tarea en TaskManager (PDF - Tarea 5 Sprint 2)
+                const task = taskManager.addTask(name.trim(), description.trim(), date, status);
+
                 // Crear y agregar la tarea al contenedor #taskList
-                const task = {
-                    id: Date.now(),
-                    name: name.trim(),
-                    description: description.trim(),
-                    status: status,
-                    date: date
+                const cardTask = {
+                    id: task.id,
+                    name: task.name,
+                    description: task.description,
+                    status: task.status,
+                    date: task.dueDate
                 };
                 if (taskList) {
-                    taskList.appendChild(createTaskCard(task));
+                    taskList.appendChild(createTaskCard(cardTask));
                 }
                 // Guardar en localStorage para mantenerla
                 const stored = getStoredTasks();
-                stored.push(task);
+                stored.push(cardTask);
                 saveStoredTasks(stored);
 
                 // Limpiar campos
@@ -311,6 +314,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (taskDateInput) taskDateInput.value = '';
 
                 // Cerrar el formulario
+                const form = document.querySelector('#newTaskForm form');
+                if (form) form.reset();
                 const collapseForm = document.querySelector('#newTaskForm');
                 if (collapseForm) {
                     collapseForm.classList.remove('show');
