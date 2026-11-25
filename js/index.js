@@ -1,7 +1,5 @@
-// app.js - Validación del formulario de tareas (Sprint 1 - Tarea 3)
-// + creación dinámica de tareas en #taskList
-
-const STORAGE_KEY = 'taskFlowTasks';
+// index.js - Validación del formulario (Sprint 1 - Tarea 3)
+// + creación, cambio de estado y eliminación de tareas (Sprint 2)
 
 // Identificar los campos del formulario
 const taskNameInput = document.querySelector('#taskName');
@@ -9,91 +7,11 @@ const taskDescInput = document.querySelector('#taskDesc');
 const taskStatusInput = document.querySelector('#taskStatus');
 const taskDateInput = document.querySelector('#taskDate');
 
-// Contenedor donde se agregan las tareas creadas
-const taskList = document.querySelector('#taskList');
-
 // Instancia de TaskManager (Sprint 2 - Tarea 4)
 const taskManager = new TaskManager();
 console.log(taskManager.tasks);
 
-// ---------- helpers ----------
-
-function escapeHtml(value) {
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
-
-function statusClass(status) {
-    switch (status) {
-        case 'Completada': return 'status-done';
-        case 'En progreso': return 'status-progress';
-        case 'Importante': return 'status-important';
-        default: return 'status-pending';
-    }
-}
-
-function getStoredTasks() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch (e) {
-        return [];
-    }
-}
-
-function saveStoredTasks(tasks) {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    } catch (e) {
-        // Si no hay localStorage disponible, se mantiene en memoria/DOM
-    }
-}
-
-function createTaskCard(task) {
-    const card = document.createElement('div');
-    card.className = 'task-card card';
-    card.dataset.id = task.id;
-
-    const completed = task.status === 'Completada';
-    const checked = completed ? 'checked' : '';
-
-    card.innerHTML = `
-        <div class="task-card-header">
-            <input type="checkbox" class="task-checkbox" ${checked}>
-            <span class="task-name ${completed ? 'completed' : ''}">${escapeHtml(task.name)}</span>
-            <select class="task-status ${statusClass(task.status)}">
-                <option value="Pendiente" ${task.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                <option value="En progreso" ${task.status === 'En progreso' ? 'selected' : ''}>En progreso</option>
-                <option value="Completada" ${task.status === 'Completada' ? 'selected' : ''}>Completada</option>
-                <option value="Importante" ${task.status === 'Importante' ? 'selected' : ''}>Importante</option>
-            </select>
-        </div>
-        <p class="task-desc">${escapeHtml(task.description)}</p>
-        <div class="task-card-footer">
-            <span class="task-date">📅 ${escapeHtml(task.date)}</span>
-            <div class="task-card-actions">
-                <button class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
-                <button class="delete-btn" title="Eliminar">🗑️</button>
-            </div>
-        </div>
-    `;
-
-    if (completed) card.classList.add('task-completed');
-
-    return card;
-}
-
-function renderStoredTasks() {
-    if (!taskList) return;
-    getStoredTasks().forEach(function (task) {
-        taskList.appendChild(createTaskCard(task));
-    });
-}
-
-// Función de validación
+// Función de validación (Sprint 1 - Tarea 3)
 function validFormFieldInput(data) {
     // Si no se pasan datos, se leen del formulario
     if (!data) {
@@ -139,126 +57,79 @@ function validFormFieldInput(data) {
     return isValid;
 }
 
-// Cuando el usuario envía el formulario
+function findTaskById(taskId) {
+    return taskManager.tasks.find(function (task) {
+        return Number(task.id) === taskId;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Renderizar tareas guardadas previamente
-    renderStoredTasks();
+    const taskList = document.querySelector('#taskList');
 
-    // Inicializar botón de completado en todas las tarjetas (estáticas y dinámicas)
-    if (taskList) {
-        taskList.querySelectorAll('.task-card').forEach(function (card) {
-            const btn = card.querySelector('.complete-btn');
-            const nameSpan = card.querySelector('.task-name');
-            if (!btn) return;
-            const completed = !!(nameSpan && nameSpan.classList.contains('completed'));
-            btn.textContent = completed ? '↺ Pendiente' : '✔ Completar';
-            if (completed) card.classList.add('task-completed');
-        });
+    // Recuperar tareas guardadas. Si no hay ninguna, usar las tarjetas de ejemplo del HTML.
+    const hadStoredTasks = taskManager.load();
+    if (!hadStoredTasks && taskList) {
+        taskManager.seedFromStaticCards(Array.from(taskList.querySelectorAll('.task-card')));
+        taskManager.save();
     }
+    taskManager.render();
 
-    // Eliminar cualquier tarjeta al pulsar su botón "Eliminar"
     if (taskList) {
-        taskList.addEventListener('click', function (e) {
-            const completeBtn = e.target && e.target.closest ? e.target.closest('.complete-btn') : null;
+        // Clic en los botones de cada tarjeta (delegación de eventos)
+        taskList.addEventListener('click', function (event) {
+            const target = event.target;
+            if (!target || !target.closest) return;
+
+            // Sprint 2 - Tarea 6: eliminar tarea
+            const deleteButton = target.closest('.delete-button');
+            if (deleteButton) {
+                const parentTask = deleteButton.closest('[data-task-id]');
+                if (!parentTask) return;
+
+                const taskId = Number(parentTask.dataset.taskId);
+                taskManager.deleteTask(taskId);
+                taskManager.save();
+                taskManager.render();
+                return;
+            }
+
+            // Sprint 2 - Tarea 4: marcar / desmarcar como completada
+            const completeBtn = target.closest('.complete-btn');
             if (completeBtn) {
-                const card = completeBtn.closest('.task-card');
+                const card = completeBtn.closest('[data-task-id]');
                 if (!card) return;
-                const nameSpan = card.querySelector('.task-name');
-                const checkbox = card.querySelector('.task-checkbox');
-                const select = card.querySelector('.task-status');
-                const isDone = !(nameSpan && nameSpan.classList.contains('completed'));
-                if (nameSpan) nameSpan.classList.toggle('completed', isDone);
-                if (checkbox) checkbox.checked = isDone;
-                if (select) {
-                    const newStatus = isDone ? 'Completada' : 'Pendiente';
-                    select.value = newStatus;
-                    select.className = 'task-status ' + statusClass(newStatus);
-                }
-                card.classList.toggle('task-completed', isDone);
-                completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
 
-                const id = card.dataset.id;
-                if (id) {
-                    const tasks = getStoredTasks().map(function (t) {
-                        if (String(t.id) === String(id)) t.status = isDone ? 'Completada' : 'Pendiente';
-                        return t;
-                    });
-                    saveStoredTasks(tasks);
-                }
-                return;
-            }
+                const task = findTaskById(Number(card.dataset.taskId));
+                if (!task) return;
 
-            const deleteBtn = e.target && e.target.closest ? e.target.closest('.delete-btn') : null;
-            if (!deleteBtn) return;
-            const card = deleteBtn.closest('.task-card');
-            if (!card) return;
-            const id = card.dataset.id;
-            card.remove();
-            if (id) {
-                const remaining = getStoredTasks().filter(function (t) { return String(t.id) !== String(id); });
-                saveStoredTasks(remaining);
+                task.status = task.status === 'Completada' ? 'Pendiente' : 'Completada';
+                taskManager.save();
+                taskManager.render();
             }
         });
-    }
 
-    // Editar estado (select) y checkbox de cualquier tarjeta
-    if (taskList) {
-        taskList.addEventListener('change', function (e) {
-            const target = e.target;
-            if (!target) return;
+        // Cambio de estado (select) o checkbox
+        taskList.addEventListener('change', function (event) {
+            const target = event.target;
+            if (!target || !target.classList) return;
 
-            // Cambio de estado mediante select
-            if (target.classList && target.classList.contains('task-status')) {
-                const card = target.closest('.task-card');
-                if (!card) return;
-                const newStatus = target.value;
-                target.className = 'task-status ' + statusClass(newStatus);
-
-                const checkbox = card.querySelector('.task-checkbox');
-                const nameSpan = card.querySelector('.task-name');
-                const isDone = newStatus === 'Completada';
-                if (checkbox) checkbox.checked = isDone;
-                if (nameSpan) nameSpan.classList.toggle('completed', isDone);
-                card.classList.toggle('task-completed', isDone);
-                const completeBtn = card.querySelector('.complete-btn');
-                if (completeBtn) completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
-
-                const id = card.dataset.id;
-                if (id) {
-                    const tasks = getStoredTasks().map(function (t) {
-                        if (String(t.id) === String(id)) t.status = newStatus;
-                        return t;
-                    });
-                    saveStoredTasks(tasks);
-                }
-                return;
+            let newStatus = null;
+            if (target.classList.contains('task-status')) {
+                newStatus = target.value;
+            } else if (target.classList.contains('task-checkbox')) {
+                newStatus = target.checked ? 'Completada' : 'Pendiente';
             }
+            if (!newStatus) return;
 
-            // Cambio de checkbox
-            if (target.classList && target.classList.contains('task-checkbox')) {
-                const card = target.closest('.task-card');
-                if (!card) return;
-                const select = card.querySelector('.task-status');
-                const nameSpan = card.querySelector('.task-name');
-                const isDone = target.checked;
-                if (nameSpan) nameSpan.classList.toggle('completed', isDone);
-                if (select) {
-                    const newStatus = isDone ? 'Completada' : 'Pendiente';
-                    select.value = newStatus;
-                    select.className = 'task-status ' + statusClass(newStatus);
-                }
-                card.classList.toggle('task-completed', isDone);
-                const completeBtn = card.querySelector('.complete-btn');
-                if (completeBtn) completeBtn.textContent = isDone ? '↺ Pendiente' : '✔ Completar';
-                const id = card.dataset.id;
-                if (id && select) {
-                    const tasks = getStoredTasks().map(function (t) {
-                        if (String(t.id) === String(id)) t.status = select.value;
-                        return t;
-                    });
-                    saveStoredTasks(tasks);
-                }
-            }
+            const card = target.closest('[data-task-id]');
+            if (!card) return;
+
+            const task = findTaskById(Number(card.dataset.taskId));
+            if (!task) return;
+
+            task.status = newStatus;
+            taskManager.save();
+            taskManager.render();
         });
     }
 
@@ -288,24 +159,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (alertBox) alertBox.classList.add('d-none');
                 console.log('Formulario válido');
 
-                // Registrar la tarea en TaskManager (PDF - Tarea 5 Sprint 2)
-                const task = taskManager.addTask(name.trim(), description.trim(), date, status);
-
-                // Crear y agregar la tarea al contenedor #taskList
-                const cardTask = {
-                    id: task.id,
-                    name: task.name,
-                    description: task.description,
-                    status: task.status,
-                    date: task.dueDate
-                };
-                if (taskList) {
-                    taskList.appendChild(createTaskCard(cardTask));
-                }
-                // Guardar en localStorage para mantenerla
-                const stored = getStoredTasks();
-                stored.push(cardTask);
-                saveStoredTasks(stored);
+                // Sprint 2 - Tarea 5: registrar la tarea desde el formulario
+                taskManager.addTask(name.trim(), description.trim(), date, status);
+                taskManager.save();
+                taskManager.render();
 
                 // Limpiar campos
                 if (taskNameInput) taskNameInput.value = '';
