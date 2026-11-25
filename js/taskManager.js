@@ -67,9 +67,12 @@ class TaskManager {
             const stored = JSON.parse(localStorage.getItem(this.storageKey));
             if (!Array.isArray(stored)) return false;
 
-            this.tasks = stored;
-            this.currentId = stored.reduce(function (max, task) {
-                return Math.max(max, Number(task.id) || 0);
+            // Normalizar a número para que deleteTask() compare valores del mismo tipo
+            this.tasks = stored.map(function (task) {
+                return Object.assign({}, task, { id: Number(task.id) });
+            });
+            this.currentId = this.tasks.reduce(function (max, task) {
+                return Math.max(max, task.id || 0);
             }, 0);
             return true;
         } catch (e) {

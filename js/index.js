@@ -80,19 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const target = event.target;
             if (!target || !target.closest) return;
 
-            // Sprint 2 - Tarea 6: eliminar tarea
-            const deleteButton = target.closest('.delete-button');
-            if (deleteButton) {
-                const parentTask = deleteButton.closest('[data-task-id]');
-                if (!parentTask) return;
-
-                const taskId = Number(parentTask.dataset.taskId);
-                taskManager.deleteTask(taskId);
-                taskManager.save();
-                taskManager.render();
-                return;
-            }
-
             // Sprint 2 - Tarea 4: marcar / desmarcar como completada
             const completeBtn = target.closest('.complete-btn');
             if (completeBtn) {
@@ -103,6 +90,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!task) return;
 
                 task.status = task.status === 'Completada' ? 'Pendiente' : 'Completada';
+                taskManager.save();
+                taskManager.render();
+                return;
+            }
+
+            // Sprint 2 - Tarea 6 (Paso 3): después de "Marcar como hecho", eliminar tarea
+            const deleteButton = target.closest('.delete-button');
+            if (deleteButton) {
+                const parentTask = deleteButton.closest('[data-task-id]');
+                if (!parentTask) return;
+
+                const taskId = Number(parentTask.dataset.taskId);
+                if (Number.isNaN(taskId)) return;
+
+                taskManager.deleteTask(taskId);
                 taskManager.save();
                 taskManager.render();
             }
