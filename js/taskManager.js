@@ -1,4 +1,4 @@
-// taskManager.js - Clase TaskManager (Sprint 2 - Tareas 4, 5 y 6)
+// taskManager.js - Clase TaskManager (Sprint 2 - Tareas 4, 5 y 6; Sprint 3 - Tarea 7)
 
 const TASK_STORAGE_KEY = 'taskFlowTasks';
 
@@ -13,7 +13,8 @@ function escapeTaskHtml(value) {
 
 function taskStatusClass(status) {
     switch (status) {
-        case 'Completada': return 'status-done';
+        case 'Completada':
+        case 'DONE': return 'status-done';
         case 'En progreso': return 'status-progress';
         case 'Importante': return 'status-important';
         default: return 'status-pending';
@@ -51,6 +52,19 @@ class TaskManager {
         }
 
         this.tasks = newTasks;
+    }
+
+    // Sprint 3 - Tarea 7 (Paso 4): recuperar la tarea por su id
+    getTaskById(taskId) {
+        let foundTask;
+
+        for (let task of this.tasks) {
+            if (task.id === taskId) {
+                foundTask = task;
+            }
+        }
+
+        return foundTask;
     }
 
     // Persistencia en localStorage
@@ -97,32 +111,33 @@ class TaskManager {
         });
     }
 
-    // HTML de cada tarjeta: incluye el botón delete-button (Tarea 6)
-    createTaskHtml(task) {
+    // HTML de cada tarjeta: delete-button (Tarea 6) y done-button (Tarea 7)
+    createTaskHtml(id, name, description, dueDate, status) {
         const card = document.createElement('div');
         card.className = 'task-card card';
-        card.dataset.taskId = task.id;
+        card.dataset.taskId = id;
 
-        const completed = task.status === 'Completada';
+        const completed = status === 'Completada' || status === 'DONE';
         const checked = completed ? 'checked' : '';
-        const dueDate = task.dueDate || task.date || '';
 
         card.innerHTML = `
             <div class="task-card-header">
                 <input type="checkbox" class="task-checkbox" ${checked}>
-                <span class="task-name ${completed ? 'completed' : ''}">${escapeTaskHtml(task.name)}</span>
-                <select class="task-status ${taskStatusClass(task.status)}">
-                    <option value="Pendiente" ${task.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                    <option value="En progreso" ${task.status === 'En progreso' ? 'selected' : ''}>En progreso</option>
-                    <option value="Completada" ${completed ? 'selected' : ''}>Completada</option>
-                    <option value="Importante" ${task.status === 'Importante' ? 'selected' : ''}>Importante</option>
+                <span class="task-name ${completed ? 'completed' : ''}">${escapeTaskHtml(name)}</span>
+                <select class="task-status ${taskStatusClass(status)}">
+                    <option value="Pendiente" ${status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                    <option value="En progreso" ${status === 'En progreso' ? 'selected' : ''}>En progreso</option>
+                    <option value="Completada" ${status === 'Completada' ? 'selected' : ''}>Completada</option>
+                    <option value="Importante" ${status === 'Importante' ? 'selected' : ''}>Importante</option>
+                    <option value="DONE" ${status === 'DONE' ? 'selected' : ''}>DONE</option>
                 </select>
             </div>
-            <p class="task-desc">${escapeTaskHtml(task.description)}</p>
+            <p class="task-desc">${escapeTaskHtml(description)}</p>
             <div class="task-card-footer">
                 <span class="task-date">📅 ${escapeTaskHtml(dueDate)}</span>
                 <div class="task-card-actions">
                     <button type="button" class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
+                    <button type="button" class="done-button btn btn-success" title="Mark As Done">Mark As Done</button>
                     <button type="button" class="delete-button delete-btn" title="Eliminar">🗑️ Eliminar</button>
                 </div>
             </div>
@@ -140,7 +155,13 @@ class TaskManager {
 
         taskList.innerHTML = '';
         this.tasks.forEach((task) => {
-            taskList.appendChild(this.createTaskHtml(task));
+            taskList.appendChild(this.createTaskHtml(
+                task.id,
+                task.name,
+                task.description,
+                task.dueDate || task.date || '',
+                task.status
+            ));
         });
     }
 }

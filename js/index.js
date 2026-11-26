@@ -57,12 +57,6 @@ function validFormFieldInput(data) {
     return isValid;
 }
 
-function findTaskById(taskId) {
-    return taskManager.tasks.find(function (task) {
-        return Number(task.id) === taskId;
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     const taskList = document.querySelector('#taskList');
 
@@ -86,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const card = completeBtn.closest('[data-task-id]');
                 if (!card) return;
 
-                const task = findTaskById(Number(card.dataset.taskId));
+                const task = taskManager.getTaskById(Number(card.dataset.taskId));
                 if (!task) return;
 
                 task.status = task.status === 'Completada' ? 'Pendiente' : 'Completada';
@@ -105,6 +99,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (Number.isNaN(taskId)) return;
 
                 taskManager.deleteTask(taskId);
+                taskManager.save();
+                taskManager.render();
+                return;
+            }
+
+            // Sprint 3 - Tarea 7: actualizar el status a DONE
+            const doneButton = target.closest('.done-button');
+            if (doneButton) {
+                const parentTask = doneButton.closest('[data-task-id]');
+                if (!parentTask) return;
+
+                console.log(parentTask);
+
+                const taskId = Number(parentTask.dataset.taskId);
+                if (Number.isNaN(taskId)) return;
+
+                const task = taskManager.getTaskById(taskId);
+                if (!task) return;
+
+                task.status = 'DONE';
                 taskManager.save();
                 taskManager.render();
             }
@@ -126,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const card = target.closest('[data-task-id]');
             if (!card) return;
 
-            const task = findTaskById(Number(card.dataset.taskId));
+            const task = taskManager.getTaskById(Number(card.dataset.taskId));
             if (!task) return;
 
             task.status = newStatus;
