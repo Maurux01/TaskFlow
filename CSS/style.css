@@ -199,20 +199,26 @@ main {
   min-width: 96px;
 }
 
-.task-status.status-done {
-  color: #008000;
+.task-status.status-pending {
+  background-color: #d4d0c8;
+  color: #1f1f1f;
 }
 
 .task-status.status-progress {
-  color: #000080;
-}
-
-.task-status.status-pending {
-  color: #404040;
+  background-color: #000080;
+  color: #ffffff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M0 2 L4 6 L8 2 Z' fill='white'/></svg>");
 }
 
 .task-status.status-important {
-  color: #800000;
+  background-color: #d9a400;
+  color: #3a2b00;
+}
+
+.task-status.status-done {
+  background-color: #006400;
+  color: #ffffff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M0 2 L4 6 L8 2 Z' fill='white'/></svg>");
 }
 
 .new-task-form {
@@ -264,7 +270,8 @@ main {
 }
 
 .task-date {
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .task-checkbox {
@@ -272,10 +279,49 @@ main {
 }
 
 .delete-btn {
-  padding: 0 6px;
+  cursor: pointer;
+}
+
+/* Botones de acción con bisel Win98 explícito (top/left claro, bottom/right oscuro) */
+.task-card-actions .delete-button,
+.task-card-actions .done-button {
+  padding: 1px 6px;
   font-size: 10px;
   min-width: 18px;
   cursor: pointer;
+  border: 2px solid;
+  border-radius: 0;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.task-card-actions .done-button {
+  background: #2f7d32;
+  border-color: #8fd49a #1b5e20 #1b5e20 #8fd49a;
+}
+
+.task-card-actions .done-button:hover {
+  background: #3a8f3d;
+}
+
+.task-card-actions .done-button:active {
+  border-color: #1b5e20 #8fd49a #8fd49a #1b5e20;
+  padding: 2px 5px 0 7px;
+}
+
+.task-card-actions .delete-button {
+  background: #a4262c;
+  border-color: #e08f93 #6f151a #6f151a #e08f93;
+}
+
+.task-card-actions .delete-button:hover {
+  background: #b53036;
+}
+
+.task-card-actions .delete-button:active {
+  border-color: #6f151a #e08f93 #e08f93 #6f151a;
+  padding: 2px 5px 0 7px;
 }
 
 .new-task-container {

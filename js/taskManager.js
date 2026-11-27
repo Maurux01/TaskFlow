@@ -81,9 +81,10 @@ class TaskManager {
             const stored = JSON.parse(localStorage.getItem(this.storageKey));
             if (!Array.isArray(stored)) return false;
 
-            // Normalizar a número para que deleteTask() compare valores del mismo tipo
+            // Normalizar ids a número y estados heredados "Completada" a "DONE"
             this.tasks = stored.map(function (task) {
-                return Object.assign({}, task, { id: Number(task.id) });
+                const status = task.status === 'Completada' ? 'DONE' : task.status;
+                return Object.assign({}, task, { id: Number(task.id), status: status });
             });
             this.currentId = this.tasks.reduce(function (max, task) {
                 return Math.max(max, task.id || 0);
@@ -111,7 +112,7 @@ class TaskManager {
         });
     }
 
-    // HTML de cada tarjeta: delete-button (Tarea 6) y done-button (Tarea 7)
+    // HTML de cada tarjeta: done-button (Tarea 7) y delete-button (Tarea 6)
     createTaskHtml(id, name, description, dueDate, status) {
         const card = document.createElement('div');
         card.className = 'task-card card';
@@ -120,25 +121,28 @@ class TaskManager {
         const completed = status === 'Completada' || status === 'DONE';
         const checked = completed ? 'checked' : '';
 
+        // DONE se controla solo con el botón: se muestra, pero no se puede elegir en el select.
+        const doneOption = status === 'DONE'
+            ? '<option value="DONE" disabled selected>DONE</option>'
+            : '';
+
         card.innerHTML = `
             <div class="task-card-header">
-                <input type="checkbox" class="task-checkbox" ${checked}>
+                <input type="checkbox" class="task-checkbox" ${checked} disabled>
                 <span class="task-name ${completed ? 'completed' : ''}">${escapeTaskHtml(name)}</span>
                 <select class="task-status ${taskStatusClass(status)}">
+                    ${doneOption}
                     <option value="Pendiente" ${status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                     <option value="En progreso" ${status === 'En progreso' ? 'selected' : ''}>En progreso</option>
-                    <option value="Completada" ${status === 'Completada' ? 'selected' : ''}>Completada</option>
                     <option value="Importante" ${status === 'Importante' ? 'selected' : ''}>Importante</option>
-                    <option value="DONE" ${status === 'DONE' ? 'selected' : ''}>DONE</option>
                 </select>
             </div>
             <p class="task-desc">${escapeTaskHtml(description)}</p>
             <div class="task-card-footer">
                 <span class="task-date">📅 ${escapeTaskHtml(dueDate)}</span>
                 <div class="task-card-actions">
-                    <button type="button" class="complete-btn" title="Marcar como completada">${completed ? '↺ Pendiente' : '✔ Completar'}</button>
                     <button type="button" class="done-button btn btn-success" title="Mark As Done">Mark As Done</button>
-                    <button type="button" class="delete-button delete-btn" title="Eliminar">🗑️ Eliminar</button>
+                    <button type="button" class="delete-button delete-btn" title="Delete">Delete</button>
                 </div>
             </div>
         `;

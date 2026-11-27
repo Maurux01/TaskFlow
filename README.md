@@ -30,11 +30,9 @@ TaskFlow/
 ├── index.html
 ├── README.md
 ├── CSS/
-│   ├── style.css
-│   └── account.css
+│   └── style.css
 ├── js/
-│   ├── api.js           # Reloj, clima, frase del día y calendario
-│   ├── index.js         # Formulario, validación y eventos de las tarjetas
+│   ├── index.js         # Formulario, APIs y eventos de las tarjetas
 │   └── taskManager.js   # Clase TaskManager: alta, baja, guardado y render
 ├── HTML/
 │   └── Account.html     # Pantalla de inicio de sesión (estilo Windows 98)
@@ -43,10 +41,11 @@ TaskFlow/
 │   ├── Taskflow.png
 │   └── wireframe.png
 ├── sprint#1/            # Guías PDF de las tareas 1 a 3
-└── sprint#2/            # Guías PDF de las tareas 4 a 6
+├── sprint#2/            # Guías PDF de las tareas 4 a 6
+└── sprint#3/            # Guía PDF de la tarea 7
 ```
 
-Las guías de los sprints se conservan únicamente en formato PDF dentro de las carpetas `sprint#1/` y `sprint#2/`.
+Las guías de los sprints se conservan únicamente en formato PDF dentro de las carpetas `sprint#1/`, `sprint#2/` y `sprint#3/`.
 
 ## Wireframe
 
@@ -62,7 +61,7 @@ Vista del wireframe en Figma para referencia del HTML:
 ## APIs
 
 - Calendario: FullCalendar (open source) + eventos en localStorage
-- Time: https://time.now/developer/api
+- Reloj: hora local del navegador (`toLocaleTimeString`), sin API externa
 - Weather: https://open-meteo.com/
 - Frase del día: lista local en español (sin API externa)
 
@@ -104,11 +103,11 @@ Proyecto publicado: https://maurux01.github.io/TaskFlow/
 ## Cumplimiento del Sprint 2
 
 ### Tarea 4 — Clase de Tareas y marcado de completado
-- Carpeta `js/` organizada con `index.js`, `api.js` y `taskManager.js`.
+- Carpeta `js/` organizada con `index.js` (formulario, APIs y eventos) y `taskManager.js` (clase TaskManager).
 - Clase `TaskManager` creada en `js/taskManager.js` con `this.tasks = []`.
 - Scripts vinculados en `index.html` en el orden correcto (`taskManager.js` antes de `index.js`).
 - Instancia `taskManager` creada y verificada desde la consola (`[]`).
-- Botón **✔ Completar / ↺ Pendiente** en cada tarjeta para marcar y desmarcar una tarea como completada (toggle) sin recargar la página, con cambio visual (tachado, color y borde).
+- La funcionalidad de marcar como completada se conserva: en la Tarea 7 quedó unificada en el botón **Mark As Done** (`done-button`), con cambio visual (tachado, color y borde). El toggle **Completar/Pendiente** se retiró por redundante; para volver a `Pendiente` se usa el `<select>` de estado.
 - Cambios guardados en el repositorio.
 
 ### Tarea 5 — Agregar tareas de manera programada
@@ -119,7 +118,7 @@ Proyecto publicado: https://maurux01.github.io/TaskFlow/
 - Después de registrar, el formulario queda limpio y listo para otra entrada.
 
 ### Tarea 6 — Eliminar una tarea
-- Cada tarjeta incluye el botón **🗑️ Eliminar** con la clase `delete-button` (además de las clases de estilo del proyecto).
+- Cada tarjeta incluye el botón **Delete** con la clase `delete-button` (además de las clases de estilo del proyecto).
 - `TaskManager.deleteTask(taskId)` construye `newTasks`, conserva solo las tareas cuyo `id` es diferente y actualiza `this.tasks`.
 - El `EventListener` de `click` sobre `#taskList` detecta `delete-button`, obtiene el contenedor con `data-task-id`, convierte el id con `Number()` y ejecuta `deleteTask()` → `save()` → `render()`.
 - Las tareas se guardan en `localStorage` (`taskFlowTasks`); al recargar, la tarea eliminada no vuelve a aparecer.
@@ -133,6 +132,30 @@ Proyecto publicado: https://maurux01.github.io/TaskFlow/
 - La eliminación y los cambios de estado permanecen al recargar la página.
 - Deploy actualizado con la versión final del Sprint 2 y enlace verificado desde este README.
 - Guías de entrega conservadas en PDF en `sprint#1/` y `sprint#2/`.
+
+## Cumplimiento del Sprint 3
+
+### Tarea 7 — Actualizar una tarea
+- Cada tarjeta (la estática del HTML y la generada por `createTaskHtml`) incluye el botón **Mark As Done** con la clase `done-button`.
+- La lista `#taskList` usa un único EventListener de `click`; con `event.target`/`closest` localiza `parentTask`, la tarjeta sobre la que se hizo clic.
+- El contenedor de la tarea expone `data-task-id` (en el HTML y mediante `card.dataset.taskId`), y `render()` pasa `task.id` a `createTaskHtml(id, name, description, dueDate, status)`.
+- `TaskManager.getTaskById(taskId)` recorre `this.tasks` con `for...of`, guarda la coincidencia en `foundTask` y la devuelve.
+- El valor de `data-task-id` se convierte con `Number()` antes de buscar la tarea.
+- La tarea seleccionada cambia su `status` a `'DONE'` y se vuelve a renderizar con `taskManager.render()`.
+- Se eliminó el botón toggle **Completar/Pendiente**: **Mark As Done** es el único control para marcar una tarea como hecha.
+- El `<select>` ya no permite elegir `DONE` ni `Completada`: sus opciones son `Pendiente`, `En progreso` e `Importante`. Cuando la tarea está en `DONE` aparece una opción `DONE` deshabilitada y seleccionada que solo refleja el estado. Para volver a `Pendiente` se cambia el `<select>`.
+- Las tareas guardadas con el estado heredado `Completada` se normalizan a `DONE` al cargar, para que no queden estados duplicados.
+- El checkbox de la tarjeta quedó como indicador visual (`disabled`) y ya no dispara cambios de estado.
+- Estilos: `Mark As Done` en verde y `Delete` en rojo, ambos con bisel Win98 explícito (claro arriba/izquierda, oscuro abajo/derecha) y estados hover/active.
+- El selector de estado usa chips con contraste alto sobre el gris: `Pendiente` gris claro con texto oscuro, `En progreso` azul marino con texto blanco, `Importante` ámbar con texto oscuro y `DONE` verde con texto blanco. La flecha del `<select>` cambia a blanca en los fondos oscuros.
+- Se conservan el historial de commits y las funcionalidades de los sprints anteriores: formulario y validación, cambio de estado, eliminar, reloj, clima, frase y calendario.
+- `api.js` quedó integrado en `js/index.js` para respetar la estructura base del PDF (`js/index.js` + `js/taskManager.js`), sin perder ninguna integración previa.
+
+> **Nota:** la Tarea 8 del Sprint 3 (persistencia de tareas en LocalStorage como nueva actividad) no se ha adelantado. El guardado en `localStorage` que ya existe corresponde a los avances de los sprints anteriores y se mantuvo intacto.
+
+### Cierre del Sprint 3
+- Guía de entrega de la Tarea 7 conservada en PDF en `sprint#3/`.
+- Cambios listos para ser guardados mediante commits en el mismo repositorio.
 
 ## Créditos
 

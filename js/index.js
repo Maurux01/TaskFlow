@@ -1,5 +1,176 @@
-// index.js - Validación del formulario (Sprint 1 - Tarea 3)
-// + creación, cambio de estado y eliminación de tareas (Sprint 2)
+// index.js - Punto de entrada de TaskFlow
+// Sprint 1 - Tarea 3: validación del formulario
+// Sprint 2 - Tareas 4, 5 y 6: creación, estados y eliminación de tareas
+// Sprint 3 - Tarea 7: actualización del estado a DONE (único control de "hecho")
+// Integración de APIs (reloj, clima, frase del día y calendario), antes en api.js.
+
+// ============================================================
+// APIs y widgets (reloj, clima, frase del día, calendario)
+// ============================================================
+
+// ---------- Reloj ----------
+function initClock() {
+    const el = document.getElementById('clockDisplay');
+    if (!el) return;
+
+    const tick = () => {
+        el.textContent = new Date().toLocaleTimeString('es-CO', { hour12: false });
+    };
+
+    tick();
+    setInterval(tick, 1000);
+}
+
+// ---------- Clima (Open-Meteo) ----------
+const WEATHER_CODES = {
+    0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+    51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+    71: '🌨️', 73: '🌨️', 75: '🌨️', 80: '🌦️', 81: '🌧️', 82: '🌧️',
+    95: '⛈️', 96: '⛈️', 99: '⛈️'
+};
+
+async function loadWeather(lat, lon) {
+    try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const current = data.current;
+
+        const tempEl = document.getElementById('weatherTemp');
+        const iconEl = document.getElementById('weatherIcon');
+        const locationEl = document.getElementById('weatherLocation');
+
+        if (tempEl) tempEl.textContent = `${Math.round(current.temperature_2m)}°C`;
+        if (iconEl) iconEl.textContent = WEATHER_CODES[current.weather_code] || '🌡️';
+        if (locationEl) locationEl.textContent = 'Ubicación actual';
+    } catch (error) {
+        console.error('Error clima:', error);
+        const locationEl = document.getElementById('weatherLocation');
+        if (locationEl) locationEl.textContent = 'Sin conexión';
+    }
+}
+
+function initWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => loadWeather(position.coords.latitude, position.coords.longitude),
+            () => loadWeather(4.711, -74.0721)
+        );
+    } else {
+        loadWeather(4.711, -74.0721);
+    }
+}
+
+// ---------- Frase del día (lista local en español) ----------
+const SPANISH_QUOTES = [
+    { text: 'El único modo de hacer un gran trabajo es amar lo que haces.', author: 'Steve Jobs' },
+    { text: 'La vida es lo que pasa mientras estás ocupado haciendo otros planes.', author: 'John Lennon' },
+    { text: 'No cuentes los días, haz que los días cuenten.', author: 'Muhammad Ali' },
+    { text: 'El éxito es la suma de pequeños esfuerzos repetidos día tras día.', author: 'Robert Collier' },
+    { text: 'Cree en ti mismo y todo será posible.', author: 'Anónimo' },
+    { text: 'La disciplina es el puente entre metas y logros.', author: 'Jim Rohn' },
+    { text: 'No hay caminos fáciles, solo pasos firmes.', author: 'Anónimo' },
+    { text: 'La constancia vence lo que la dicha no alcanza.', author: 'Refrán' }
+];
+
+function loadQuote() {
+    try {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const day = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+        const quote = SPANISH_QUOTES[day % SPANISH_QUOTES.length];
+
+        const quoteEl = document.getElementById('dailyQuote');
+        const authorEl = document.getElementById('quoteAuthor');
+
+        if (quoteEl) quoteEl.textContent = `“${quote.text}”`;
+        if (authorEl) authorEl.textContent = `- ${quote.author}`;
+    } catch (error) {
+        console.error('Error frase:', error);
+    }
+}
+
+// ---------- Calendario (FullCalendar + localStorage) ----------
+const EVENTS_KEY = 'taskFlowEvents';
+
+function getEvents() {
+    try {
+        return JSON.parse(localStorage.getItem(EVENTS_KEY)) || [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveEvents(events) {
+    try {
+        localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+    } catch (error) {
+        console.warn('No se pudieron guardar los eventos:', error);
+    }
+}
+
+let calendar = null;
+
+function initCalendar() {
+    const el = document.getElementById('calendar');
+    if (!el || !window.FullCalendar) return;
+
+    calendar = new FullCalendar.Calendar(el, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        events: getEvents(),
+        eventClick: function (info) {
+            if (confirm(`¿Eliminar el evento "${info.event.title}"?`)) {
+                const remaining = getEvents().filter(function (event) {
+                    return String(event.id) !== String(info.event.id);
+                });
+                saveEvents(remaining);
+                info.event.remove();
+            }
+        }
+    });
+
+    calendar.render();
+}
+
+function showUpcoming() {
+    const events = getEvents()
+        .slice()
+        .sort((a, b) => String(a.start).localeCompare(String(b.start)));
+    const today = new Date().toISOString().slice(0, 10);
+    const upcoming = events.filter((event) => String(event.start) >= today).slice(0, 5);
+
+    if (upcoming.length === 0) {
+        alert('No hay eventos próximos.');
+        return;
+    }
+
+    alert(upcoming.map((event) => `${event.start} - ${event.title}`).join('\n'));
+}
+
+function addEvent() {
+    const title = prompt('Título del evento:');
+    if (!title) return;
+
+    const date = prompt('Fecha (YYYY-MM-DD):', new Date().toISOString().slice(0, 10));
+    if (!date) return;
+
+    const event = { id: String(Date.now()), title: title, start: date, allDay: true };
+    const events = getEvents();
+    events.push(event);
+    saveEvents(events);
+
+    if (calendar) calendar.addEvent(event);
+}
+
+// ============================================================
+// Formulario y TaskManager
+// ============================================================
 
 // Identificar los campos del formulario
 const taskNameInput = document.querySelector('#taskName');
@@ -58,6 +229,28 @@ function validFormFieldInput(data) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    // ---------- Inicio de APIs y widgets ----------
+    initClock();
+    initWeather();
+    loadQuote();
+    initCalendar();
+
+    const addEventBtn = document.getElementById('addEventBtn');
+    if (addEventBtn) addEventBtn.addEventListener('click', addEvent);
+
+    const todayBtn = document.getElementById('todayBtn');
+    if (todayBtn) todayBtn.addEventListener('click', () => { if (calendar) calendar.today(); });
+
+    const monthBtn = document.getElementById('monthBtn');
+    if (monthBtn) monthBtn.addEventListener('click', () => { if (calendar) calendar.changeView('dayGridMonth'); });
+
+    const weekBtn = document.getElementById('weekBtn');
+    if (weekBtn) weekBtn.addEventListener('click', () => { if (calendar) calendar.changeView('timeGridWeek'); });
+
+    const upcomingBtn = document.getElementById('upcomingBtn');
+    if (upcomingBtn) upcomingBtn.addEventListener('click', showUpcoming);
+
+    // ---------- Inicio de tareas ----------
     const taskList = document.querySelector('#taskList');
 
     // Recuperar tareas guardadas. Si no hay ninguna, usar las tarjetas de ejemplo del HTML.
@@ -69,27 +262,12 @@ document.addEventListener('DOMContentLoaded', function () {
     taskManager.render();
 
     if (taskList) {
-        // Clic en los botones de cada tarjeta (delegación de eventos)
+        // Sprint 3 - Tarea 7: un único EventListener de click sobre la lista de tareas
         taskList.addEventListener('click', function (event) {
             const target = event.target;
             if (!target || !target.closest) return;
 
-            // Sprint 2 - Tarea 4: marcar / desmarcar como completada
-            const completeBtn = target.closest('.complete-btn');
-            if (completeBtn) {
-                const card = completeBtn.closest('[data-task-id]');
-                if (!card) return;
-
-                const task = taskManager.getTaskById(Number(card.dataset.taskId));
-                if (!task) return;
-
-                task.status = task.status === 'Completada' ? 'Pendiente' : 'Completada';
-                taskManager.save();
-                taskManager.render();
-                return;
-            }
-
-            // Sprint 2 - Tarea 6 (Paso 3): después de "Marcar como hecho", eliminar tarea
+            // Sprint 2 - Tarea 6 (Paso 3): eliminar la tarea seleccionada
             const deleteButton = target.closest('.delete-button');
             if (deleteButton) {
                 const parentTask = deleteButton.closest('[data-task-id]');
@@ -104,12 +282,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Sprint 3 - Tarea 7: actualizar el status a DONE
+            // Sprint 3 - Tarea 7 (Pasos 2 y 5): identificar el botón, obtener el id,
+            // recuperar la tarea con getTaskById() y cambiar su status a DONE.
             const doneButton = target.closest('.done-button');
             if (doneButton) {
                 const parentTask = doneButton.closest('[data-task-id]');
                 if (!parentTask) return;
 
+                // Prueba del Paso 2: imprimir el elemento de la tarea seleccionada.
                 console.log(parentTask);
 
                 const taskId = Number(parentTask.dataset.taskId);
@@ -124,17 +304,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Cambio de estado (select) o checkbox
+        // Cambio de categoría/estado desde el select. El checkbox es solo indicador visual.
         taskList.addEventListener('change', function (event) {
             const target = event.target;
-            if (!target || !target.classList) return;
+            if (!target || !target.classList || !target.classList.contains('task-status')) return;
 
-            let newStatus = null;
-            if (target.classList.contains('task-status')) {
-                newStatus = target.value;
-            } else if (target.classList.contains('task-checkbox')) {
-                newStatus = target.checked ? 'Completada' : 'Pendiente';
-            }
+            const newStatus = target.value;
             if (!newStatus) return;
 
             const card = target.closest('[data-task-id]');
@@ -149,11 +324,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const addBtn = document.querySelector('#addTaskBtn');
+    const addTaskBtn = document.querySelector('#addTaskBtn');
     const alertBox = document.querySelector('#formAlert');
 
-    if (addBtn) {
-        addBtn.addEventListener('click', function () {
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', function () {
             // Recuperar los valores ingresados
             const name = taskNameInput ? taskNameInput.value : '';
             const description = taskDescInput ? taskDescInput.value : '';
@@ -187,8 +362,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (taskDateInput) taskDateInput.value = '';
 
                 // Cerrar el formulario
-                const form = document.querySelector('#newTaskForm form');
-                if (form) form.reset();
+                const newTaskForm = document.querySelector('#newTaskForm form');
+                if (newTaskForm) newTaskForm.reset();
                 const collapseForm = document.querySelector('#newTaskForm');
                 if (collapseForm) {
                     collapseForm.classList.remove('show');
@@ -206,9 +381,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // También validar al enviar el formulario (por si se usa Enter)
     const form = document.querySelector('.new-task-form');
     if (form) {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            if (addBtn) addBtn.click();
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (addTaskBtn) addTaskBtn.click();
         });
     }
 
@@ -217,19 +392,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const collapseForm = document.querySelector('#newTaskForm');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', function () {
-            // Limpiar campos
             if (taskNameInput) taskNameInput.value = '';
             if (taskDescInput) taskDescInput.value = '';
             if (taskStatusInput) taskStatusInput.value = 'Pendiente';
             if (taskDateInput) taskDateInput.value = '';
-            // Ocultar alerta
             if (alertBox) alertBox.classList.add('d-none');
-            // Cerrar el colapsable
+
             if (collapseForm) {
                 collapseForm.classList.remove('show');
                 const btnToggle = document.querySelector('.new-task-btn');
                 if (btnToggle) btnToggle.setAttribute('aria-expanded', 'false');
             }
+
             console.log('Formulario cancelado y limpiado');
         });
     }
